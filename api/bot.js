@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         const chatId = update.message.chat.id;
         const text = update.message.text;
 
-        let reply = text === "/start" ? "Привет 👋 Я бот на Vercel!" : `Ты написал: ${text}`;
+        let reply = text === "/start" ? "Привет Александр! Я буду служить тебе верой и правдой" : `Ты написал: ${text}`;
 
         await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
           method: "POST",
