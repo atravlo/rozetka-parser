@@ -7,3 +7,7 @@
     }
   ]
 }
+
+
+
+curl -X GET "https://api.telegram.org/bot7542243086:AAF80dFZWOiaqe9OZiPltMFuellbtJXft6o/setWebhook?url=https://rozetka-parse.vercel.app/api/bot

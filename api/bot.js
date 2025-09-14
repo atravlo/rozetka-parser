@@ -1,32 +1,32 @@
 import fetch from "node-fetch";
 
+export const config = { api: { bodyParser: true } };
+
 const TOKEN = process.env.TELEGRAM_TOKEN;
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const update = req.body;
+    try {
+      const update = req.body;
 
-    if (update.message && update.message.text) {
-      const chatId = update.message.chat.id;
-      const text = update.message.text;
+      if (update.message && update.message.text) {
+        const chatId = update.message.chat.id;
+        const text = update.message.text;
 
-      let reply = "";
+        let reply = text === "/start" ? "Привет 👋 Я бот на Vercel!" : `Ты написал: ${text}`;
 
-      if (text === "/start") {
-        reply = "Привет 👋 Я бот на Vercel!";
-      } else {
-        reply = `Ты написал: ${text}`;
+        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: chatId, text: reply }),
+        });
       }
 
-      // Отправляем сообщение через Telegram API
-      await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: reply }),
-      });
+      return res.status(200).send("ok");
+    } catch (error) {
+      console.error("Ошибка в API бота:", error.message);
+      return res.status(500).send("Internal Server Error");
     }
-
-    return res.status(200).send("ok");
   }
 
   res.status(200).send("Bot is running 🚀");
