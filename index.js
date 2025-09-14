@@ -22,41 +22,58 @@ await page.setExtraHTTPHeaders({
     "Referer": "https://rozetka.com.ua/"
 });
 
-const productsList = [];
+
+const url = `${process.argv[3]}/page=${process.argv[2]}`;
+await page.goto(url, { waitUntil: 'networkidle2' });
+await new Promise(resolve => setTimeout(resolve, 30000));
 
 
-for (let index = 1; index <= 76; index++) {
-
-    const url = `https://hard.rozetka.com.ua/ua/monitors/c80089/page=${index}`;
-    await page.goto(url, { waitUntil: 'networkidle2' });
 
 
-    // Парсинг товаров
-    const products = await page.evaluate(() => {
+// Парсинг товаров
+const products = await page.evaluate(() => {
 
-        const items = []
-        document.querySelectorAll(".item").forEach(item => {
-            const saleEl = item.querySelector(".promo-label_type_action");
-            const linkEl = item.querySelector(".text-base");
+    const items = []
+    document.querySelectorAll(".item").forEach(item => {
 
-            items.push({
-                link: linkEl ? (linkEl.href || linkEl.innerText.trim()) : 0,
-                sale: saleEl ? saleEl.innerText.replace(/\D/g, "") : 0
-            });
+        const oldPrice = item.querySelector(".old-price") ? item.querySelector(".old-price").innerText.replace(/\D/g, "") : 0;
+        const price = item.querySelector(".price") ? item.querySelector(".price").innerText.replace(/\D/g, "") : 0;
+        const sale = (oldPrice - price) / (oldPrice / 100);
+        const linkEl = item.querySelector(".text-base") + "%";
+
+        items.push({
+            link: linkEl ? (linkEl.href || linkEl.innerText.trim()) : 0,
+            sale: sale,
+            oldPrice,
+            price
         });
 
-        return items
 
     });
 
-    productsList.push(...products)
+    return items
 
+});
+
+
+
+
+
+
+// 1. Читаем существующий файл
+let productsListJson = [];
+if (fs.existsSync('products.json')) {
+    const data = fs.readFileSync('products.json', 'utf-8');
+    productsListJson = JSON.parse(data);
 }
 
+// 2. Добавляем новые строки
+productsListJson.push(...products);
 
-productsList.sort((a, b) => b.sale - a.sale)
+productsListJson.sort((a, b) => b.sale - a.sale)
 
-// Запись в JSON
-fs.writeFileSync('products.json', JSON.stringify(productsList, null, 2));
-console.log('Файл products.json создан');
+// 3. Сохраняем обратно в JSON
+fs.writeFileSync('products.json', JSON.stringify(productsListJson, null, 2));
+
+console.log('Новые элементы добавлены в products.json');
 await browser.close()
