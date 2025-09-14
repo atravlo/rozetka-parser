@@ -38,15 +38,17 @@ const products = await page.evaluate(() => {
 
         const oldPrice = item.querySelector(".old-price") ? item.querySelector(".old-price").innerText.replace(/\D/g, "") : 0;
         const price = item.querySelector(".price") ? item.querySelector(".price").innerText.replace(/\D/g, "") : 0;
-        const sale = (oldPrice - price) / (oldPrice / 100);
-        const linkEl = item.querySelector(".text-base") + "%";
+        const sale = ((oldPrice - price) / (oldPrice / 100)).toFixed(1);
+        const linkEl = item.querySelector(".text-base");
 
+        if (!sale) {
+            return
+        }
         items.push({
-            link: linkEl ? (linkEl.href || linkEl.innerText.trim()) : 0,
-            sale: sale,
-            oldPrice,
-            price
+            link: linkEl ? linkEl.href : 0,
+            sale
         });
+
 
 
     });
@@ -57,7 +59,7 @@ const products = await page.evaluate(() => {
 
 
 
-
+const filteredProducts = products.filter(item => item.sale > process.argv[4])
 
 
 // 1. Читаем существующий файл
@@ -68,7 +70,7 @@ if (fs.existsSync('products.json')) {
 }
 
 // 2. Добавляем новые строки
-productsListJson.push(...products);
+productsListJson.push(...filteredProducts);
 
 productsListJson.sort((a, b) => b.sale - a.sale)
 

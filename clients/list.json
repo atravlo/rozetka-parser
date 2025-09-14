@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Саша",
+    "id": "dffdgfgfg",
+    "lists": {
+      "Компьютеры": {
+        "link": "https://hard.rozetka.com.ua/ua/computers/c80095/",
+        "max": 20,
+        "sale": 50
+      }
+    }
+  }
+]
