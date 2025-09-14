@@ -1,11 +1,11 @@
-import TelegramBot from "node-telegram-bot-api";
+import fetch from "node-fetch";
 
-const TOKEN = process.env.TELEGRAM_TOKEN;
-const bot = new TelegramBot(TOKEN, { polling: false });
+const TOKEN = process.env.TELEGRAM_TOKEN; // токен бота
+const chatId = 68539189;               // куда отправлять
+const text = "Привет! Это сообщение с сервера";
 
-const chatId = "68539189";
-const text = "Привет! Сообщение с сервера через node-telegram-bot-api";
-
-bot.sendMessage(chatId, text)
-  .then(() => console.log("Сообщение отправлено"))
-  .catch(console.error);
+await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ chat_id: chatId, text }),
+});
