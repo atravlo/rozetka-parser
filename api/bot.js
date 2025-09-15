@@ -1,10 +1,15 @@
 import fetch from "node-fetch";
-
+import fs from 'fs';
+import path from 'path';
 export const config = { api: { bodyParser: true } };
 
-const TOKEN = process.env.TELEGRAM_TOKEN;
+
+const filePath = path.join(process.cwd(), '', 'config.json');
+const raw = fs.readFileSync(filePath, 'utf-8');
+const configJson = JSON.parse(raw);
 
 export default async function handler(req, res) {
+  console.log(configJson.tokenBot)
   if (req.method === "POST") {
     console.log("Получен POST от Telegram:", req.body);
     try {
@@ -16,7 +21,7 @@ export default async function handler(req, res) {
 
         let reply = text === "/start" ? "Привет Александр! Великий мастер гипноза. Я буду служить тебе верой и правдой" : `Ты написал: ${text}`;
 
-        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        await fetch(`https://api.telegram.org/bot${configJson.tokenBot}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ chat_id: chatId, text: reply }),
@@ -30,5 +35,5 @@ export default async function handler(req, res) {
     }
   }
 
-  res.status(200).send("Bot is running 🚀");
+  res.status(200).send("Bot is running");
 }

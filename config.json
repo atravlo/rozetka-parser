@@ -1,0 +1,9 @@
+{
+  "serverBot": "https://3da4ff48f58d.ngrok-free.app/api/",
+  "tokenBot": "7542243086:AAFEM-3vBXmImdC2VLz0Z0Sf7unkd5e3k_o",
+  "webHookSet": "https://api.telegram.org/bot",
+  "getMe": "https://api.telegram.org/bot7542243086:AAFMK-Z8tzziYVUvzeYwDSO4Du6F6DW_Jsc/getMe",
+  "getCurrentWebHook": "https://api.telegram.org/bot7542243086:AAF80dFZWOiaqe9OZiPltMFuellbtJXft6o/getWebhookInfo",
+  "webHook": "https://api.telegram.org/bot7542243086:AAFEM-3vBXmImdC2VLz0Z0Sf7unkd5e3k_o/setWebhook?url=https://c9022d87db43.ngrok-free.app/api/bot",
+  "getWebHookInfo": "https://api.telegram.org/bot7542243086:AAF80dFZWOiaqe9OZiPltMFuellbtJXft6o/getWebhookInfo"
+}
